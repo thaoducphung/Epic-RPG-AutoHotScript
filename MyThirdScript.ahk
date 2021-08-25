@@ -26,7 +26,7 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
 		SendInput, RPG HUNT T {Enter} 	
-		sleep 300 ;
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
@@ -39,7 +39,7 @@ XButton2::
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
 		SendInput, RPG HUNT T {Enter} 	
-		sleep 300 ;
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
@@ -53,12 +53,12 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 	If (Toggle = 1) {
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
-		SendInput, RPG BOWSAW{Enter} 	
-		sleep 300 ;
+		SendInput, RPG CHAINSAW{Enter} 	
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
-		SendInput, RPG BOWSAW{Enter} 	
+		SendInput, RPG CHAINSAW{Enter} 	
 	}
 	Return
 
@@ -66,12 +66,12 @@ XButton1::
 	If (Toggle = 1) {
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
-		SendInput, RPG BOWSAW{Enter} 	
-		sleep 300 ;
+		SendInput, RPG CHAINSAW{Enter} 	
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
-		SendInput, RPG BOWSAW{Enter} 	
+		SendInput, RPG CHAINSAW{Enter} 	
 	}
 	Return
 
@@ -83,7 +83,7 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
 		SendInput, RPG TRAINING {Enter} 	
-		sleep 300 ;
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
@@ -98,7 +98,7 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
 		SendInput, Y{Enter} 	
-		sleep 300 ;
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
@@ -113,7 +113,7 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
 		SendInput, RPG I{Enter} 	
-		sleep 300 ;
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
@@ -129,7 +129,7 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
 		SendInput, RPG P{Enter} 	
-		sleep 300 ;
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
@@ -151,7 +151,7 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
 		SendInput, RPG ADVENTURE{Enter} 	
-		sleep 300 ;
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
@@ -166,7 +166,7 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
 		SendInput, RPG RD{Enter} 	
-		sleep 300 ;
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
@@ -180,12 +180,12 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 	If (Toggle = 1) {
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
-		SendInput, RPG FARM CARROT{Enter} 	
-		sleep 300 ;
+		SendInput, RPG FARM{Enter} 	
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
-		SendInput, RPG FARM CARROT{Enter} 	
+		SendInput, RPG FARM{Enter} 	
 	}
 	Return
 
@@ -196,7 +196,7 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
 		SendInput, RPG HEAL{Enter} 	
-		sleep 300 ;
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
@@ -211,7 +211,7 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
 		SendInput, JOIN{Enter} 	
-		sleep 300 ;
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
@@ -232,7 +232,7 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
 		SendInput, FIGHT{Enter} 	
-		sleep 300 ;
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
@@ -247,7 +247,7 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
 		SendInput, RPG CD{Enter} 	
-		sleep 300 ;
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
@@ -262,7 +262,7 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
 		SendInput, RPG BUY ED LB{Enter} 	
-		sleep 300 ;
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
@@ -277,7 +277,7 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 		WinGet, winid ,, A ; <-- need to identify window A = acitive
 		WinActivate, ahk_exe Discord.exe
 		SendInput, N{Enter} 	
-		sleep 300 ;
+		sleep 120 ;
 		WinActivate ahk_id %winid%
 	} else {
 		WinActivate, ahk_exe Discord.exe
