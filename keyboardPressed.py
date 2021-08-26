@@ -8,10 +8,29 @@ import os
 from dotenv import load_dotenv
 import re
 
-load_dotenv()
-Bao_id = 419041968094445568
-client = discord.Client()
+from win10toast import ToastNotifier
 
+import downloadImage
+from downloadImage import downloadImageFile, get15SecondFile
+
+
+
+def show_noti_epic_guard():
+	toaster.show_toast(
+		"EPIC GUARD",
+		"Cảnh sát check",
+		duration=2
+	)
+
+# Loading dataset from csv file
+dir_path = os.path.dirname(os.path.realpath(__file__))
+load_dotenv()
+client = discord.Client()
+toaster = ToastNotifier()
+
+Bao_id = 419041968094445568
+
+image_folder = 'images'
 mapping_icon = {
 	'gift':'gift',
 	'coin' :'coin',
@@ -31,11 +50,8 @@ mapping_letter = {
 icon_pattern = ':\w+:'
 bold_pattern = '\*\*\w+\*\*'
 
-
 num_of_rubies = None
 
-# Loading dataset from csv file
-dir_path = os.path.dirname(os.path.realpath(__file__))
 
 @client.event
 async def on_ready():
@@ -54,16 +70,33 @@ async def on_message(message):
 
 	if message.content.startswith('$hello'):
 		await message.channel.send('Mình là Thảo đẹp trai')
+		print(message.author)
 		await message.channel.send(message.author.mention)
 		await message.channel.send(f'You are in the script <@!{Bao_id}>!')
 	
 	if ("EPIC GUARD" in message.content) and ("stop there" in message.content):
+		if (message.channel.name == 'thao-channel'):
+			show_noti_epic_guard()
 		print('Bớ người ta cảnh sát check!')
 		print('###################################################')
+		print('message.channel\n')
 		print(message.channel.name)
+		print('message.content\n')
 		print(message.content)
+		# print('message.attachments\n',message.attachments)
+		# print(message.attachments)
+		# print(message.attachments[0].url)
+
+		image_url = message.attachments[0].url
+		downloadImageFile(dir_path,image_folder,str(message.author),image_url)
+
 		print('###################################################')
 		await message.channel.send('Bớ người ta cảnh sát check!')
+
+	if message.content.strip().lower() in downloadImage.STRING_ARRAY:
+		message_author = str(message.author)
+		folder_name = message.content.strip().lower()
+		get15SecondFile(dir_path,image_folder,message_author,folder_name)
 
 	# print(message)
 	# print(message.author)
@@ -85,62 +118,65 @@ async def on_message(message):
 
 
 	if '**NOPE!**' in message.content:
-		rubies_question = re.search(r'\d', s)
-		rubies_question = rubies_question.group(0)
+		rubies_number = re.search(r'\d', message.content.split('\n')[0])
+		rubies_number = rubies_number.group(0)
+		print('rubies_number',rubies_number)
+	try:
+		if 'is training' in message.content:
+			with open(os.path.join(dir_path,'training.txt'),'a') as fd:
+				fd.write(message.content+'\n')
+			question_raw = message.content
+			question = question_raw.lower().split('\n')[1]
+			if "name of" in question:
+				find_word = re.search(icon_pattern,question)
+				key_word = find_word.group(0).replace(':','')
+				key_word = key_word.lower()
+				if 'normie' in key_word:
+					await message.channel.send('1')
+				elif 'golden' in key_word:
+					await message.channel.send('2')
+				elif 'epic' in key_word:
+					await message.channel.send('3')
+			elif "letter of" in question:
+				find_bold_word = re.search(bold_pattern,question)
+				find_key_word = re.search(icon_pattern,question)
+				
+				bold_word = find_bold_word.group(0).replace('*','')
+				bold_word = bold_word.lower()
 
-	if 'is training' in message.content:
-		with open(os.path.join(dir_path,'training.txt'),'a') as fd:
-			fd.write(message.content+'\n')
-		question_raw = message.content
-		question = question_raw.lower().split('\n')[1]
-		if "name of" in question:
-			find_word = re.search(icon_pattern,question)
-			key_word = find_word.group(0).replace(':','')
-			key_word = key_word.lower()
-			if 'normie' in key_word:
-				await message.channel.send('1')
-			elif 'golden' in key_word:
-				await message.channel.send('2')
-			elif 'epic' in key_word:
-				await message.channel.send('3')
-		elif "letter of" in question:
-			find_bold_word = re.search(bold_pattern,question)
-			find_key_word = re.search(icon_pattern,question)
-			
-			bold_word = find_bold_word.group(0).replace('*','')
-			bold_word = bold_word.lower()
+				key_word = find_key_word.group(0).replace(':','')
+				key_word = key_word.lower()
 
-			key_word = find_key_word.group(0).replace(':','')
-			key_word = key_word.lower()
+				await message.channel.send(key_word[mapping_letter[bold_word]-1])
 
-			print(key_word[mapping_letter[bold_word]-1])
-			await message.channel.send(key_word[mapping_letter[bold_word]-1])
+			elif "is this" in question:
+				find_bold_word = re.search(bold_pattern,question)
+				find_key_word = re.search(icon_pattern,question)
+				
+				bold_word = find_bold_word.group(0).replace('*','')
+				bold_word = bold_word.lower()
 
-		elif "is this" in question:
-			find_bold_word = re.search(bold_pattern,question)
-			find_key_word = re.search(icon_pattern,question)
-			
-			bold_word = find_bold_word.group(0).replace('*','')
-			bold_word = bold_word.lower()
+				key_word = find_key_word.group(0).replace(':','')
+				key_word = key_word.lower()
 
-			key_word = find_key_word.group(0).replace(':','')
-			key_word = key_word.lower()
-
-			if mapping_icon[bold_word] == key_word:
-				await message.channel.send('Y')
+				if mapping_icon[bold_word] == key_word:
+					await message.channel.send('Y')
+				else:
+					await message.channel.send('N')
+			elif "rubies" in question:
+				if num_of_rubies is None:
+					await message.channel.send("Not implement yet! Take a guess!")
+				else:
+					await message.channel.send(str(num_of_rubies))
 			else:
-				await message.channel.send('N')
-		elif "rubies" in question:
-			if num_of_rubies is None:
-				await message.channel.send("Not implement yet! Take a guess!")
-			else:
-				await message.channel.send(str(num_of_rubies))
-		else:
-			log_icon = question_raw.lower().split('\n')[-1]
-			find_icon_pattern = re.search(icon_pattern,log_icon)
-			log_key_word = find_icon_pattern.group(0)
-			log_number = len(re.findall(log_key_word, question))
-			await message.channel.send(log_number)
+				log_icon = question_raw.lower().split('\n')[-1]
+				find_icon_pattern = re.search(icon_pattern,log_icon)
+				log_key_word = find_icon_pattern.group(0)
+				log_number = len(re.findall(log_key_word, question))
+				await message.channel.send(log_number)
+	except Exception as err:
+		print(err)
+		await message.channel.send("SOMETHING'S WRONG! PLEASE CALL THAO!")
 
 
 client.run(os.getenv('DISCORD_TOKEN'))
