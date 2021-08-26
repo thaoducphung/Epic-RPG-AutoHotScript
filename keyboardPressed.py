@@ -1,4 +1,4 @@
-# import pyautogui
+import pyautogui
 
 # pyautogui.hotkey('Alt', 'q') # Press the Ctrl-C hotkey combination.
 
@@ -12,6 +12,8 @@ from win10toast import ToastNotifier
 
 import downloadImage
 from downloadImage import downloadImageFile, get15SecondFile
+
+from findActiveWindow import findDiscordWindow
 
 
 
@@ -77,6 +79,7 @@ async def on_message(message):
 	if ("EPIC GUARD" in message.content) and ("stop there" in message.content):
 		if (message.channel.name == 'thao-channel'):
 			show_noti_epic_guard()
+			findDiscordWindow()
 		print('Bớ người ta cảnh sát check!')
 		print('###################################################')
 		print('message.channel\n')
@@ -86,15 +89,19 @@ async def on_message(message):
 		# print('message.attachments\n',message.attachments)
 		# print(message.attachments)
 		# print(message.attachments[0].url)
-
-		image_url = message.attachments[0].url
-		downloadImageFile(dir_path,image_folder,str(message.author),image_url)
+		try: # When test it - don't have the image, so bypass the error
+			image_url = message.attachments[0].url
+			user_id = re.search('\d+',message.content)
+			user_id = user_id.group(0)
+			downloadImageFile(dir_path,image_folder,user_id,image_url)
+		except IndexError:
+			print('There is no image in the message content!')
 
 		print('###################################################')
 		await message.channel.send('Bớ người ta cảnh sát check!')
-
+	# print(str(message.author.id))
 	if message.content.strip().lower() in downloadImage.STRING_ARRAY:
-		message_author = str(message.author)
+		message_author = str(message.author.id)
 		folder_name = message.content.strip().lower()
 		get15SecondFile(dir_path,image_folder,message_author,folder_name)
 
@@ -122,6 +129,7 @@ async def on_message(message):
 		rubies_number = rubies_number.group(0)
 		print('rubies_number',rubies_number)
 	try:
+		result = None
 		if 'is training' in message.content:
 			with open(os.path.join(dir_path,'training.txt'),'a') as fd:
 				fd.write(message.content+'\n')
@@ -132,10 +140,13 @@ async def on_message(message):
 				key_word = find_word.group(0).replace(':','')
 				key_word = key_word.lower()
 				if 'normie' in key_word:
+					result = '1'
 					await message.channel.send('1')
 				elif 'golden' in key_word:
+					result = '2'
 					await message.channel.send('2')
 				elif 'epic' in key_word:
+					result = '3'
 					await message.channel.send('3')
 			elif "letter of" in question:
 				find_bold_word = re.search(bold_pattern,question)
@@ -147,7 +158,8 @@ async def on_message(message):
 				key_word = find_key_word.group(0).replace(':','')
 				key_word = key_word.lower()
 
-				await message.channel.send(key_word[mapping_letter[bold_word]-1])
+				result = key_word[mapping_letter[bold_word]-1]
+				await message.channel.send(result)
 
 			elif "is this" in question:
 				find_bold_word = re.search(bold_pattern,question)
@@ -160,10 +172,15 @@ async def on_message(message):
 				key_word = key_word.lower()
 
 				if mapping_icon[bold_word] == key_word:
+					result = 'Y'
 					await message.channel.send('Y')
 				else:
+					result = 'N'
 					await message.channel.send('N')
 			elif "rubies" in question:
+				
+				result = 'N'
+
 				if num_of_rubies is None:
 					await message.channel.send("Not implement yet! Take a guess!")
 				else:
@@ -173,9 +190,19 @@ async def on_message(message):
 				find_icon_pattern = re.search(icon_pattern,log_icon)
 				log_key_word = find_icon_pattern.group(0)
 				log_number = len(re.findall(log_key_word, question))
+				result = log_number
 				await message.channel.send(log_number)
+
+			# Check if user name is whyimpro
+			if "**whyimpro**" in question_raw:
+				findDiscordWindow()
+				pyautogui.press('Enter') # Enter all the current text then type result
+				pyautogui.write(str(result)) # prints out result instantly
+				pyautogui.press('Enter') # Enter the result
+
 	except Exception as err:
 		print(err)
+		print(message.content)
 		await message.channel.send("SOMETHING'S WRONG! PLEASE CALL THAO!")
 
 

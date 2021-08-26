@@ -27,7 +27,11 @@ mapping_letter = {
 letter_questions = ['apple','banana']
 message = f.read()
 
-
+stringA = " Search cai nay thu xem <@405714559857590283>"
+rubies_question = re.search('\d+', stringA)
+print('rubies_question',rubies_question)
+print('rubies_question.group(0)',rubies_question.group(0))
+asdasd
 question = message.split('\n')[0]
 print('question\n',question)
 if '**NOPE!**' in question:
