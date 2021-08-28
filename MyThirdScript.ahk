@@ -244,19 +244,13 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 ; N = NO
 
 !z:: ; ALT-Z
-KeyWait Control, L  ; Wait for both Control and Alt to be released.
-KeyWait Alt, L  ; Wait for both Control and Alt to be released.
-	If (Toggle = 1) {
-		WinGet, winid ,, A ; <-- need to identify window A = acitive
-		WinActivate, ahk_exe Discord.exe
-		SendInput, FIGHT{Enter} 	
-		sleep 120 ;
-		WinActivate ahk_id %winid%
-	} else {
-		WinActivate, ahk_exe Discord.exe
-		SendInput, FIGHT{Enter} 	
-	}
-	Return
+WinGet, winid ,, A ; <-- need to identify window A = acitive
+	SetTitleMatchMode, RegEx
+	WinActivate arena
+	Send, join{Enter}
+	sleep 120 ;
+	WinActivate ahk_id %winid%
+	return
 
 !x:: ; ALT-X
 	WinGet, winid ,, A ; <-- need to identify window A = acitive
