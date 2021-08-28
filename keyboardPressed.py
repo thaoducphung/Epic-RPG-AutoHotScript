@@ -1,4 +1,7 @@
+import win32gui
 import pyautogui
+import time
+import json
 
 # pyautogui.hotkey('Alt', 'q') # Press the Ctrl-C hotkey combination.
 
@@ -13,9 +16,11 @@ from win10toast import ToastNotifier
 import downloadImage
 from downloadImage import downloadImageFile, get15SecondFile
 
-from findActiveWindow import findDiscordWindow
+from findActiveWindow import findDiscordWindow, raise_window
 
-
+### COMMAND
+# $switchoff/$switchon
+SWITCH_BOOLEAN = False
 
 def show_noti_epic_guard():
 	toaster.show_toast(
@@ -31,8 +36,25 @@ client = discord.Client()
 toaster = ToastNotifier()
 
 Bao_id = 419041968094445568
+Thao_user = 'whyimpro#9865'
 
 image_folder = 'images'
+
+dict_rubies = {
+    'whyimpro': {
+    	'user_id': '405714559857590283',
+    	'ruby_num': None
+    },
+    'tku' : {
+    	'user_id': '536755394786099202',
+    	'ruby_num': None
+    },
+    'nighd': {
+    	'user_id': '419041968094445568',
+    	'ruby_num': None
+    },
+}
+
 mapping_icon = {
 	'gift':'gift',
 	'coin' :'coin',
@@ -47,11 +69,13 @@ mapping_letter = {
 	'third' : 3,
 	'fourth': 4,
 	'fifth' : 5,
+	'sixth' : 6,
+	'seventh':7,
 }
 
 icon_pattern = ':\w+:'
-bold_pattern = '\*\*\w+\*\*'
-
+# bold_pattern = '\*\*\w+\*\*' # Old one doesn work with space maybe remove in future
+bold_pattern = '\*\*[\w ]+\*\*'
 num_of_rubies = None
 
 
@@ -70,6 +94,13 @@ async def on_message(message):
 	# 		await message.channel.send(f'Mình là Bảo cùi <@!{Bao_id}> !')
 	# 	return
 
+	if message.content.lower().startswith("$switchoff") and (message.author==Thao_user):
+		SWITCH_BOOLEAN = False
+		await message.channel.send('**SWITCH MODE: OFF**')
+	if message.content.lower().startswith("$switchon") and (message.author==Thao_user):
+		await message.channel.send('**SWITCH MODE: ON**')
+
+
 	if message.content.startswith('$hello'):
 		await message.channel.send('Mình là Thảo đẹp trai')
 		print(message.author)
@@ -79,7 +110,8 @@ async def on_message(message):
 	if ("EPIC GUARD" in message.content) and ("stop there" in message.content):
 		if (message.channel.name == 'thao-channel'):
 			show_noti_epic_guard()
-			findDiscordWindow()
+			# findDiscordWindow()
+			raise_window('Discord')
 		print('Bớ người ta cảnh sát check!')
 		print('###################################################')
 		print('message.channel\n')
@@ -111,28 +143,34 @@ async def on_message(message):
 
 	# if (message.channel.name == 'thao-channel'):
 
+	embeds = message.embeds # return list of embeds
+	if embeds: 
+		for embed in embeds:
+			embeded_json = embed.to_dict() # it's content of embed in dict
+			# print(json.dumps(embeded_json, indent=4, sort_keys=True))
+			if "fields" in embeded_json:
+				if embeded_json["fields"][0]["name"] == "Items":
+					ruby_pattern = r'\*\*ruby\*\*: \d+' # **ruby**: 89
+					rubies_number = re.search(ruby_pattern,embeded_json["fields"][0]["value"])
+					if rubies_number:
+						rubies_number = int(rubies_number.group(0).split(" ")[-1])
+					else:
+						rubies_number = 0
+					author_name = embeded_json["author"]["name"].split('\'')[0].lower()
+					print('author_name',author_name)
+					dict_rubies[author_name]['ruby_num'] = rubies_number
+					await message.channel.send(f"<@!{dict_rubies[author_name]['user_id']}>" + ' have '+ str(rubies_number)+ ' **rubies**.')
 
-		# print(message.content)
-		# embeds = message.embeds # return list of embeds
-		# if not embeds:
-		# 	print('Embedded is NONE!')
-		# 	# print(type(embeds))
-		# else:
-		# 	print('EMBEDDED:\n')
-		# 	for embed in embeds:
-		# 		print(embed.to_dict()) # it's content of embed in dict
-		# 	print('END!\n')
 
-
-	if '**NOPE!**' in message.content:
-		rubies_number = re.search(r'\d', message.content.split('\n')[0])
-		rubies_number = rubies_number.group(0)
-		print('rubies_number',rubies_number)
+	# if '**NOPE!**' in message.content:
+	# 	rubies_number = re.search(r'\d+', message.content.split('\n')[0])
+	# 	rubies_number = rubies_number.group(0)
+	# 	print('rubies_number',rubies_number)
 	try:
 		result = None
 		if 'is training' in message.content:
-			with open(os.path.join(dir_path,'training.txt'),'a') as fd:
-				fd.write(message.content+'\n')
+			# with open(os.path.join(dir_path,'training.txt'),'a') as fd:
+			# 	fd.write(message.content+'\n')
 			question_raw = message.content
 			question = question_raw.lower().split('\n')[1]
 			if "name of" in question:
@@ -161,10 +199,10 @@ async def on_message(message):
 				result = key_word[mapping_letter[bold_word]-1]
 				await message.channel.send(result)
 
-			elif "is this" in question:
+			elif ("is this" in question) or ("casino" in question):
 				find_bold_word = re.search(bold_pattern,question)
 				find_key_word = re.search(icon_pattern,question)
-				
+
 				bold_word = find_bold_word.group(0).replace('*','')
 				bold_word = bold_word.lower()
 
@@ -178,13 +216,22 @@ async def on_message(message):
 					result = 'N'
 					await message.channel.send('N')
 			elif "rubies" in question:
-				
 				result = 'N'
-
-				if num_of_rubies is None:
-					await message.channel.send("Not implement yet! Take a guess!")
+				user_sentence = question_raw.lower().split('\n')[0]
+				user_name = re.search(bold_pattern,user_sentence).group(0).replace("*","").lower()
+				if dict_rubies[user_name]['ruby_num'] is None:
+					await message.channel.send("Not store rubies info yet! Take a guess!")
 				else:
-					await message.channel.send(str(num_of_rubies))
+					# Get number of rubies from the question
+					ruby_question = re.search('\d+',question)
+					# Get user name from the question
+					if ruby_question: # Check if num exist then compare
+						if int(dict_rubies[user_name]['ruby_num']) > int(ruby_question.group(0)):
+							await message.channel.send('Y')
+							result = 'Y'
+						else:
+							await message.channel.send('N')
+				await message.channel.send("Please update the the rubies by 'rpg i' before training!")
 			else:
 				log_icon = question_raw.lower().split('\n')[-1]
 				find_icon_pattern = re.search(icon_pattern,log_icon)
@@ -195,10 +242,19 @@ async def on_message(message):
 
 			# Check if user name is whyimpro
 			if "**whyimpro**" in question_raw:
-				findDiscordWindow()
-				pyautogui.press('Enter') # Enter all the current text then type result
+				# findDiscordWindow()
+				# name_current_window = GetWindowText(GetForegroundWindow())
+
+				discord_window = raise_window('Discord')
+				win32gui.SetForegroundWindow(discord_window[0])
+
+				pyautogui.press('Enter') # Enter all the current text then type result2
 				pyautogui.write(str(result)) # prints out result instantly
 				pyautogui.press('Enter') # Enter the result
+
+				# time.sleep(1)
+				# if SWITCH_BOOLEAN:
+				# 	raise_window(name_current_window)
 
 	except Exception as err:
 		print(err)

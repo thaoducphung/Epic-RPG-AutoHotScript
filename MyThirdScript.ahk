@@ -34,18 +34,18 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 	}
 	Return
 
-XButton2::
-	If (Toggle = 1) {
-		WinGet, winid ,, A ; <-- need to identify window A = acitive
-		WinActivate, ahk_exe Discord.exe
-		SendInput, RPG HUNT T {Enter} 	
-		sleep 120 ;
-		WinActivate ahk_id %winid%
-	} else {
-		WinActivate, ahk_exe Discord.exe
-		SendInput, RPG HUNT T {Enter} 	
-	}
-	Return
+; XButton2::
+; 	If (Toggle = 1) {
+; 		WinGet, winid ,, A ; <-- need to identify window A = acitive
+; 		WinActivate, ahk_exe Discord.exe
+; 		SendInput, RPG HUNT T {Enter} 	
+; 		sleep 120 ;
+; 		WinActivate ahk_id %winid%
+; 	} else {
+; 		WinActivate, ahk_exe Discord.exe
+; 		SendInput, RPG HUNT T {Enter} 	
+; 	}
+; 	Return
 
 !w:: ; ALT-W
 KeyWait Control, L  ; Wait for both Control and Alt to be released.
@@ -62,19 +62,36 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 	}
 	Return
 
-XButton1::
-	If (Toggle = 1) {
-		WinGet, winid ,, A ; <-- need to identify window A = acitive
-		WinActivate, ahk_exe Discord.exe
-		SendInput, RPG AXE{Enter} 	
-		sleep 120 ;
-		WinActivate ahk_id %winid%
-	} else {
-		WinActivate, ahk_exe Discord.exe
-		SendInput, RPG AXE{Enter} 	
-	}
-	Return
+; XButton1::
+; 	If (Toggle = 1) {
+; 		WinGet, winid ,, A ; <-- need to identify window A = acitive
+; 		WinActivate, ahk_exe Discord.exe
+; 		SendInput, RPG AXE{Enter} 	
+; 		sleep 120 ;
+; 		WinActivate ahk_id %winid%
+; 	} else {
+; 		WinActivate, ahk_exe Discord.exe
+; 		SendInput, RPG AXE{Enter} 	
+; 	}
+; 	Return
 
+XButton2::
+	WinGet, winid ,, A ; <-- need to identify window A = acitive
+	SetTitleMatchMode, RegEx
+	WinActivate event-drops
+	Send, fish{Enter}
+	sleep 120 ;
+	WinActivate ahk_id %winid%
+	return
+	
+XButton1::
+	WinGet, winid ,, A ; <-- need to identify window A = acitive
+	SetTitleMatchMode, RegEx
+	WinActivate event-drops
+	Send, chop{Enter}
+	sleep 120 ;
+	WinActivate ahk_id %winid%
+	return
 
 !e:: ; ALT-E
 KeyWait Control, L  ; Wait for both Control and Alt to be released.
@@ -88,73 +105,6 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 	} else {
 		WinActivate, ahk_exe Discord.exe
 		SendInput, RPG TRAINING {Enter} 	
-	}
-	Return
-
-!t:: ; ALT-T
-KeyWait Control, L  ; Wait for both Control and Alt to be released.
-KeyWait Alt, L  ; Wait for both Control and Alt to be released.
-	If (Toggle = 1) {
-		WinGet, winid ,, A ; <-- need to identify window A = acitive
-		WinActivate, ahk_exe Discord.exe
-		SendInput, fish {Enter}
-		sleep 700 ;
-		SendInput, banana  {Enter}
-		sleep 700 ;
-		SendInput, epic  fish {Enter}
-		sleep 700 ;
-		SendInput, unicorn  horn {Enter}
-		sleep 700 ;
-		SendInput, mermaid  hair {Enter}
-		sleep 700 ;
-		SendInput, apple  {Enter}
-		sleep 700 ;
-		SendInput, life  potion {Enter}
-		sleep 700 ;
-		SendInput, golden  fish {Enter}
-		sleep 700 ;
-		SendInput, zombie  eye {Enter}
-		sleep 700 ;
-		SendInput, epic  coin {Enter}
-		sleep 700 ;
-		SendInput, coin  {Enter}
-		sleep 700 ;
-		SendInput, ruby  {Enter}
-		sleep 700 ;
-		SendInput, wolf  skin {Enter}
-		sleep 700 ;
-		SendInput, chip  {Enter}
-		sleep 120 ;
-		WinActivate ahk_id %winid%
-	} else {
-		WinActivate, ahk_exe Discord.exe
-		SendInput, fish {Enter}
-		sleep 700 ;
-		SendInput, banana  {Enter}
-		sleep 700 ;
-		SendInput, epic  fish {Enter}
-		sleep 700 ;
-		SendInput, unicorn  horn {Enter}
-		sleep 700 ;
-		SendInput, mermaid  hair {Enter}
-		sleep 700 ;
-		SendInput, apple  {Enter}
-		sleep 700 ;
-		SendInput, life  potion {Enter}
-		sleep 700 ;
-		SendInput, golden  fish {Enter}
-		sleep 700 ;
-		SendInput, zombie  eye {Enter}
-		sleep 700 ;
-		SendInput, epic  coin {Enter}
-		sleep 700 ;
-		SendInput, coin  {Enter}
-		sleep 700 ;
-		SendInput, ruby  {Enter}
-		sleep 700 ;
-		SendInput, wolf  skin {Enter}
-		sleep 700 ;
-		SendInput, chip  {Enter}	
 	}
 	Return
 
@@ -288,6 +238,7 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 
 
 ; Z = FIGHT
+; X = catch using mouse special
 ; C = CD/COLDOWN
 ; B = BUY ED LB
 ; N = NO
@@ -307,6 +258,15 @@ KeyWait Alt, L  ; Wait for both Control and Alt to be released.
 	}
 	Return
 
+!x:: ; ALT-X
+	WinGet, winid ,, A ; <-- need to identify window A = acitive
+	SetTitleMatchMode, RegEx
+	WinActivate event-drops
+	Send, catch{Enter}
+	sleep 120 ;
+	WinActivate ahk_id %winid%
+	return
+	
 !c:: ; ALT-C
 KeyWait Control, L  ; Wait for both Control and Alt to be released.
 KeyWait Alt, L  ; Wait for both Control and Alt to be released.
