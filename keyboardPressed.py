@@ -1,8 +1,8 @@
-import win32gui
+import win32gui, win32com.client
 import pyautogui
 import time
 import json
-
+import socket
 # pyautogui.hotkey('Alt', 'q') # Press the Ctrl-C hotkey combination.
 
 
@@ -22,12 +22,12 @@ from findActiveWindow import findDiscordWindow, raise_window
 # $switchoff/$switchon
 SWITCH_BOOLEAN = False
 
-def show_noti_epic_guard():
-	toaster.show_toast(
-		"EPIC GUARD",
-		"Cảnh sát check",
-		duration=2
-	)
+import winsound
+
+def make_some_noise():
+	frequency = 2500  # Set Frequency To 2500 Hertz
+	duration = 2000  # Set Duration To 1000 ms == 1 second
+	winsound.Beep(frequency, duration)
 
 # Loading dataset from csv file
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -35,14 +35,39 @@ load_dotenv()
 client = discord.Client()
 toaster = ToastNotifier()
 
+### THIS ONE IS FOR TESTING TOASTER
+toaster.show_toast(
+		"TEST",
+		"Working normally",
+		duration=2
+	)
+
+### THIS ONE IS FOR TESTING SOUND WARNING
+make_some_noise()
+
+def show_noti_epic_guard():
+	toaster.show_toast(
+		"EPIC GUARD",
+		"Cảnh sát check",
+		duration=3
+	)
+
 Bao_id = 419041968094445568
 Thao_user = 'whyimpro#9865'
+
+array_name = ["405714559857590283","883408687429980260"]
+HOST = '192.168.0.105'  # The server's hostname or IP address
+PORT = 8999        # The port used by the server
 
 image_folder = 'images'
 
 dict_rubies = {
     'whyimpro': {
     	'user_id': '405714559857590283',
+    	'ruby_num': None
+    },
+    'atulaboy': {
+    	'user_id': '883408687429980260',
     	'ruby_num': None
     },
     'tku' : {
@@ -101,23 +126,28 @@ async def on_message(message):
 		await message.channel.send('**SWITCH MODE: ON**')
 
 
-	if message.content.startswith('$hello'):
+	if message.content.startswith('$Hello'):
 		await message.channel.send('Mình là Thảo đẹp trai')
 		print(message.author)
 		await message.channel.send(message.author.mention)
 		await message.channel.send(f'You are in the script <@!{Bao_id}>!')
 	
 	if ("EPIC GUARD" in message.content) and ("stop there" in message.content):
-		if (message.channel.name == 'thao-channel'):
-			show_noti_epic_guard()
-			# findDiscordWindow()
-			raise_window('Discord')
+		print(message.author)
 		print('Bớ người ta cảnh sát check!')
 		print('###################################################')
 		print('message.channel\n')
 		print(message.channel.name)
 		print('message.content\n')
 		print(message.content)
+
+		if (message.channel.name == 'thao-channel'): # and ("<!@405714559857590283>" in message.content) :
+			make_some_noise()
+			raise_window('Discord')
+			show_noti_epic_guard()
+			# findDiscordWindow()
+			
+		
 		# print('message.attachments\n',message.attachments)
 		# print(message.attachments)
 		# print(message.attachments[0].url)
@@ -143,6 +173,25 @@ async def on_message(message):
 
 	# if (message.channel.name == 'thao-channel'):
 
+	# Check if I'm in the jail
+	# <@whyimpro>, you are in the jail! type rpg jail
+	if ("you are in the **jail**" in message.content) and any([name for name in array_name if name in message.content]):
+		print(message.content)
+		try:
+			with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+				time.sleep(2)
+				s.connect((HOST, PORT))
+				s.send(b'quit\n')
+				data = s.recv(1024).decode
+				print('Data received from server:',data) # THIS NEVER HAPPENS!
+		except ConnectionRefusedError as err:
+			print(err)
+			print('Server is not available at the momment!')
+		except ConnectionResetError as err:
+			print(err)
+			print('Server is disconnected and closed!')
+
+
 	embeds = message.embeds # return list of embeds
 	if embeds: 
 		for embed in embeds:
@@ -157,15 +206,35 @@ async def on_message(message):
 					else:
 						rubies_number = 0
 					author_name = embeded_json["author"]["name"].split('\'')[0].lower()
-					print('author_name',author_name)
+					# print('author_name',author_name)
 					dict_rubies[author_name]['ruby_num'] = rubies_number
 					await message.channel.send(f"<@!{dict_rubies[author_name]['user_id']}>" + ' have '+ str(rubies_number)+ ' **rubies**.')
+				if "I have a special trade today" in embeded_json["fields"][0]["name"]:
+					print('You need to type this following text:')
+					type_pattern = '\*\*[\w !]+\*\*' # **OWO ME!!!**
+					type_text = re.search(type_pattern,embeded_json["fields"][0]["value"])
+					type_text = type_text.group(0).replace("*","")
+					print(type_text)
+					print('END HERE!')
+					discord_window = raise_window('Discord')
+					win32gui.SetForegroundWindow(discord_window[0])
 
 
 	# if '**NOPE!**' in message.content:
 	# 	rubies_number = re.search(r'\d+', message.content.split('\n')[0])
 	# 	rubies_number = rubies_number.group(0)
 	# 	print('rubies_number',rubies_number)
+
+	# if (message.author == 'EPIC GUARD') and "EPIC NPC: I have a special trade today!" in message.content:
+	# 	print()
+	# 	print('SPECIAL TRADE!')
+	# 	print('message.channel\n')
+	# 	print(message.channel.name)
+	# 	print('message.content\n')
+	# 	print(message.content)
+	# 	print()
+	# 	discord_window = raise_window('Discord')
+
 	try:
 		result = None
 		if 'is training' in message.content:
@@ -241,20 +310,20 @@ async def on_message(message):
 				await message.channel.send(log_number)
 
 			# Check if user name is whyimpro
-			if "**whyimpro**" in question_raw:
+			if ("**whyimpro**" in question_raw) or ("**atulaboy**" in question_raw) :
 				# findDiscordWindow()
 				# name_current_window = GetWindowText(GetForegroundWindow())
 
 				discord_window = raise_window('Discord')
+				shell = win32com.client.Dispatch("WScript.Shell")
+				shell.SendKeys('%')
 				win32gui.SetForegroundWindow(discord_window[0])
 
 				pyautogui.press('Enter') # Enter all the current text then type result2
 				pyautogui.write(str(result)) # prints out result instantly
 				pyautogui.press('Enter') # Enter the result
 
-				# time.sleep(1)
-				# if SWITCH_BOOLEAN:
-				# 	raise_window(name_current_window)
+
 
 	except Exception as err:
 		print(err)

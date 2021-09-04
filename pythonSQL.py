@@ -29,6 +29,17 @@ else:
     rubies_number = 0
 print('rubies_number',rubies_number)
 
+question = "**EPIC NPC**: I have a special trade today!\nI will give **80 <:EPICwoodenlog:541056003517710348> EPIC logs** to the first player who gives me **40 <:woodenlog:770880739926999070> wooden logs**"
+value =  "The first player who types the following sentence will get it!\n**OWO ME!!!**"
+if "I have a special trade today" in question:
+    print('You need to type this following text:')
+    type_pattern = '\*\*[\w !]+\*\*' # **OWO ME!!!**
+    type_text = re.search(type_pattern,value)
+    print('type_text',type_text)
+    type_text = type_text.group(0).replace("*","")
+    print(type_text)
+    print('END HERE!')
+
 asdasd
 
 def create_connection(db_file):
